@@ -399,7 +399,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     $scope.prefixInvitation = "sched_invitation_";
     $scope.prefixResponse = "sched_response_";
     $scope.appurl = "http://mzereba.github.io/scheduler/";
-    $scope.apptypes = ["<https://meccano.io/scheduler#>"];
+    $scope.apptypes = ["https://meccano.io/scheduler#"];
     $scope.current_id = -1;
 	$scope.last_id = -1;
 	$scope.current_event = {};
