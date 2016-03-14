@@ -1,0 +1,22 @@
+<div class="modal-header">
+	<h4 id="modal-title"><i class="fa fa-envelope"></i>&nbsp;&nbsp;{{modalTitle}}</h4>
+</div>
+<div class="modal-body">
+	<div class="infoView">
+	<form>
+		<p class="description" ng-hide="invitations.length > 0">
+   			You have no invitations
+		</p>
+		<div ng-repeat="i in invitations" ng-show="invitations.length > 0" style="margin-bottom: 60px;">
+   			<p style="font-weight: bold;font-size: 18px;margin-bottom: 2px;"> {{i.title}}</p>
+   			<p>{{i.description}}</p>
+   			<p style="float:left;margin-bottom: 10px;">by <font style="font-weight: bold;">{{(i.organizer.split('/')[2]).split('.')[0]}}</font></p>
+   			<p style="float:right;"><button type="button" class="btn btn-success" ng-click="acceptInvitation($index)">Accept</button></p>
+		</div>
+		<p class="noteTitle" id="note-Title">{{noteTitle}}</p>
+	</form>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn" ng-click="closeMyInvitations()">Close</button>
+</div>

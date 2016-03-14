@@ -1,0 +1,51 @@
+<div class="modal-header">
+	<h4 id="modal-title"><i class="fa fa-plus"></i>&nbsp;&nbsp;{{modalTitle}}</h4>
+</div>
+<div class="modal-body">
+	<form>
+		<label style="float: left;">Title</label><p class="errorTitle" id="error-Title">{{errorTitle}}</p>
+		<input class="form-control" ng-model="newevent.title" ng-focus="isFocused" type="text" style="width: 505px;">
+		
+		<label>Description</label>
+		<textarea class="form-control" ng-model="newevent.description" style="width: 505px;height: 100px"></textarea>	
+		
+		<!-- Start Date and Time -->
+		<div class="dates">
+			<label>Date</label>
+		    <multiple-date-picker converted-days-selected="convertedDaysSelected.value" />
+		</div>
+		<div class="times" ng-show="convertedDaysSelected.value.length > 0">
+	    	<label>Time</label>
+	    	<!-- button class="btn" ng-click="generateTime()" ng-disabled="convertedDaysSelected.value.length==0">Hours</button  -->
+	    </div>
+		<div class="times-list">
+			<p class="calTools" ng-repeat="cds in convertedDaysSelected.value">
+				<select ng-model="newTimes[cds.date()+'_'+(cds.month()+1)+'_'+cds.year()]" ng-options="h for h in hoursSelected"></select>
+				<font class="vtext">on&nbsp;{{cds.date()}}/{{cds.month()+1}}</font>
+			</p>
+		</div>
+		<!-- End date and Time -->
+		
+		<!-- Start Contacts -->
+		<div class="contacts">
+			<label>Contacts</label>
+		    <select style="width:170px;" ng-model="contact" ng-options="c.fullname for c in contacts" ></select>
+		    <button class="btn" ng-click="addPartecipant(contact)" style="vertical-align: top;">Add</button>
+		</div>
+		<div class="partecipants" ng-show="newPartecipants.length > 0">
+	    	<label>Partecipants</label>
+	    </div>
+		<div class="selected-partecipants">
+			<p class="calTools" ng-repeat="m in newPartecipants">
+				<font class="vtext">{{m.fullname}}</font>
+			</p>
+		</div>
+		<!-- End Contacts -->
+		
+	    <input ng-model="newevent.id" type="hidden">
+	</form>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-success" ng-click="save(newevent)">Save</button>
+	<button class="btn" ng-click="closeEditor()">Cancel</button>
+</div>

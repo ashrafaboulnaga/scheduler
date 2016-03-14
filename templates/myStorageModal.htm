@@ -1,0 +1,22 @@
+<div class="modal-header">
+	<h4 id="modal-title"><i class="fa fa-database"></i>&nbsp;&nbsp;{{modalTitle}}</h4>
+</div>
+<div class="modal-body">
+	<div class="infoView">
+	<form>
+		<p class="big-weight" ng-hide="storageExists">
+   			<select style="width:270px" class="form-control" ng-model="mystorage.workspace" ng-options="ws for ws in userProfile.workspaces"></select>&nbsp;/
+   			<input class="bold_placeholder" ng-model="mystorage.storagename" ng-focus="isFocused" type="text" placeholder="container name...">
+		</p>
+		<p class="big-weight" ng-show="storageExists">
+   			<select style="width:270px" class="form-control" ng-disabled="storageExists" ng-model="mystorage.workspace" ng-options="ws for ws in userProfile.workspaces"></select>&nbsp;/
+   			<input type="text" class="bold_placeholder" ng-disabled="storageExists" ng-model="mystorage.storagename" ng-focus="isFocused" type="text" placeholder="mystorage.storagename">
+		</p>
+		<button type="button" class="btn btn-success" ng-disabled="storageExists" ng-click="checkStorage(mystorage)">Save</button>
+		<p class="noteTitle" id="note-Title">{{noteTitle}}</p>
+	</form>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn" ng-click="closeMyStorage()">Close</button>
+</div>

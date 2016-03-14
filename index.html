@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scheduler</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    
+    <script src="js/jquery/jquery.js"></script>
+
+    <script src="js/angular/angular.js"></script>
+    <script src="js/angular/angular-ui-bootstrap-modal.js"></script>
+    <script src="js/angular/angular-ui-bootstrap-dropdown.js"></script>
+    <script src="js/angular/angular-ui-bootstrap-tooltip.js"></script> 
+    <script src="js/angular/angular-animate.js"></script>
+    <script src="js/utils/notifications.js"></script>
+    <script src="js/rdflib/rdflib.min.js"></script>
+    <script src="js/moment/moment.js"></script>
+    <script src="js/app.js"></script>
+    
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/font-awesome-4.4.0/css/font-awesome.min.css">
+    
+</head>
+<body ng-app="Scheduler" ng-controller="SchedulerCtrl" data-spy="scroll">
+	<header class="navbar navbar-fixed-top">
+	    <div class="navbar-inner">
+	        <div class="container">
+	        	<i class="fa fa-check"></i> 
+				Scheduler
+	        	<div class="btn-group block-right" dropdown is-open="status.isopen">
+					<button class="btn btn-primary dropdown-toggle" dropdown-toggle>
+						<i class="fa fa-bars fa-2x"></i> 
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="#" ng-show="loggedin" ng-click="add()"><i class="fa fa-plus"></i>&nbsp;&nbsp;Schedule event</a></li>
+						<li ng-show="loggedin" class="divider"></li>
+						<li><a href="#" ng-show="loggedin" ng-click="myInvitations()"><i class="fa fa-envelope"></i>&nbsp;&nbsp;My Invitations</a></li>
+						<li><a href="#" ng-show="loggedin" ng-click="myStorage()"><i class="fa fa-database"></i>&nbsp;&nbsp;My Storage</a></li>
+						<li ng-show="loggedin" class="divider"></li>
+						<li><a href="#" ng-hide="loggedin" ng-click="openAuth()"><i class="fa fa-sign-in"></i>&nbsp;&nbsp;Login</a></li>
+					  	<li><a href="#" ng-show="loggedin" ng-click="logout()"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;Logout</a></li>
+					</ul>
+				</div>
+				<div class="block-right" ng-if="loggedin" tooltip="{{userProfile.fullname}}" tooltip-placement="bottom">
+					<a href="https://linkeddata.github.io/profile-editor/#/profile/view" target="_blank"><img src="{{userProfile.image}}" alt="{{userProfile.image}}" style="border: 1px solid white;width: 40px;height: 40px;"></a>
+				</div>
+				<div class="block-right notification" ng-if="loggedin && invitations.length>0">
+					{{invitations.length}}
+				</div>
+				<div class="block-right" style="margin-right: 5px;" ng-if="loggedin && invitations.length>0" tooltip="Open Invitations from the main menu" tooltip-placement="bottom">
+					<i class="fa fa-envelope"></i>
+				</div>
+	        </div>
+	    </div>
+	</header>
+	<div role="main" style="margin-top: 100px;">
+	    <div class="container" ng-show="loggedin">
+	        <div id="left_pannel">
+		    	<h3>
+		    		My Events
+				</h3>
+				<hr class="hrleft">
+			    <p id="event_ul" class="animate-repeat" ng-style="setStyle($index)" ng-class="{hovering: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false" ng-repeat="event in events">
+			    	<a href="#" ng-click="select($index, event)">{{event.title}}</a>
+			    </p>
+			    <p class="description" ng-show="events.length == 0">
+			    	You have no events
+			    </p>    
+	    	</div>
+		    <div id="right_pannel" ng-show="events.length > 0">
+		    	<h3>
+		    		{{current_event.title}}
+				</h3>
+				<hr class="hrright">
+				<p class="description">{{current_event.description}}</p>
+				<table cellpadding="10px" cellspacing="10px">
+					<tr>
+						<td></td>
+						<td class="date_cell" ng-repeat="p in current_event.proposed">
+							{{p.getUTCDate()}}/{{p.getUTCMonth()+1}} <br> {{p.getHours() | addZero}}:00
+						</td>
+					</tr>
+					<tr ng-repeat="partecipant in current_event.partecipants">
+						<td class="user_cell"><font class="user_name">{{(partecipant.split('/')[2]).split('.')[0]}}</font><span class="arrow"></td>
+						<td class="checkbox_cell" ng-repeat="proposed_time in current_event.proposed">
+							<input type="checkbox" class="toggle" ng-checked="isChecked(partecipant, proposed_time)" ng-click="addResponse(partecipant, proposed_time)" ng-disabled="userProfile.webid != partecipant" name="thing_{{$parent.$index}}_{{$index}}" id="thing_{{$parent.$index}}_{{$index}}"><label for="thing_{{$parent.$index}}_{{$index}}"></label>
+						</td>
+					</tr>
+				</table>
+		    </div> 
+	    </div>
+	</div>
+    <div modal="authenticationModal" ng-include="'templates/authenticationModal.htm'" close="cancel()"></div>
+    <div modal="addEventModal" ng-include="'templates/addEventModal.htm'" close="cancel()" ></div>
+    <div modal="myStorageModal" ng-include="'templates/myStorageModal.htm'" close="cancel()" ></div>
+    <div modal="myInvitationsModal" ng-include="'templates/myInvitationsModal.htm'" close="cancel()" ></div>
+</body>
+</html>
