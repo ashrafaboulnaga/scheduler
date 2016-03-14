@@ -399,7 +399,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     $scope.prefixInvitation = "sched_invitation_";
     $scope.prefixResponse = "sched_response_";
     $scope.appurl = "http://mzereba.github.io/scheduler/";
-    $scope.apptypes = ["<https://example.com/schedulerEvent>", "<https://example.com/schedulerResponse>"];
+    $scope.apptypes = ["<https://meccano.io/scheduler#>"];
     $scope.current_id = -1;
 	$scope.last_id = -1;
 	$scope.current_event = {};
@@ -842,7 +842,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
 	    	var RDF = $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 		    var TITLE = $rdf.Namespace('http://purl.org/dc/elements/1.1/');
 			var TIMELINE = $rdf.Namespace('http://purl.org/NET/c4dm/timeline.owl#');
-			var EVENT = $rdf.Namespace('https://example.com/scheduler#');
+			var EVENT = $rdf.Namespace('https://meccano.io/scheduler#');
 			var LDP = $rdf.Namespace('http://www.w3.org/ns/ldp#');
 			var STAT = $rdf.Namespace('http://www.w3.org/ns/posix/stat#');
 			
@@ -880,7 +880,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
 	    	var RDF = $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 		    var TITLE = $rdf.Namespace('http://purl.org/dc/elements/1.1/');
 			var TIMELINE = $rdf.Namespace('http://purl.org/NET/c4dm/timeline.owl#');
-			var EVENT = $rdf.Namespace('https://example.com/scheduler#');
+			var EVENT = $rdf.Namespace('https://meccano.io/scheduler#');
 			var MAKER = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
 			
 			var e = 0;
@@ -948,7 +948,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
 	    	var RDF = $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 		    var TITLE = $rdf.Namespace('http://purl.org/dc/elements/1.1/');
 			var TIMELINE = $rdf.Namespace('http://purl.org/NET/c4dm/timeline.owl#');
-			var EVENT = $rdf.Namespace('https://example.com/scheduler#');
+			var EVENT = $rdf.Namespace('https://meccano.io/scheduler#');
 			var MAKER = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
 			
 			var evs = g.statementsMatching(undefined, RDF('type'), EVENT('schedulerEvent'));
@@ -1004,7 +1004,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
 	    	var RDF = $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 		    var TITLE = $rdf.Namespace('http://purl.org/dc/elements/1.1/');
 			var TIMELINE = $rdf.Namespace('http://purl.org/NET/c4dm/timeline.owl#');
-			var EVENT = $rdf.Namespace('https://example.com/scheduler#');
+			var EVENT = $rdf.Namespace('https://meccano.io/scheduler#');
 			var MAKER = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
 			
 			var evs = g.statementsMatching(undefined, RDF('type'), EVENT('schedulerInvitation'));
@@ -1045,7 +1045,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
 	    	var RDF = $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 		    var TITLE = $rdf.Namespace('http://purl.org/dc/elements/1.1/');
 			var TIMELINE = $rdf.Namespace('http://purl.org/NET/c4dm/timeline.owl#');
-			var EVENT = $rdf.Namespace('https://example.com/scheduler#');
+			var EVENT = $rdf.Namespace('https://meccano.io/scheduler#');
 			var MAKER = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
 			
 			var evs = g.statementsMatching(undefined, RDF('type'), EVENT('schedulerResponse'));
@@ -1379,7 +1379,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
         }).
         success(function(data, status, headers) {
           if (status == 200 || status == 201) {
-
+        	  notify('Success', 'Response updated.');
           }
         }).
         error(function(data, status) {
@@ -1501,13 +1501,13 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     	}
     	
     	var rdf =   "<" + uri + ">\n" +
-    				"a <http://www.w3.org/2000/01/rdf-schema#Resource>, <https://example.com/scheduler#schedulerEvent> ;\n" +
-    				"<https://example.com/scheduler#title> \"" + event.title + "\" ;\n" +
-    				"<https://example.com/scheduler#description> \"" + event.description + "\" ;\n" +
-    				"<https://example.com/scheduler#origin_url> <" + event.origin_url + "> ;\n" +
-					"<https://example.com/scheduler#organizer> <" + event.organizer + "> ;\n" +
-					"<https://example.com/scheduler#proposed> " + sProposed + " ;\n" +
-    				"<https://example.com/scheduler#attendee> " + sAttendee + " .\n" ;
+    				"a <http://www.w3.org/2000/01/rdf-schema#Resource>, <https://meccano.io/scheduler#schedulerEvent> ;\n" +
+    				"<https://meccano.io/scheduler#title> \"" + event.title + "\" ;\n" +
+    				"<https://meccano.io/scheduler#description> \"" + event.description + "\" ;\n" +
+    				"<https://meccano.io/scheduler#origin_url> <" + event.origin_url + "> ;\n" +
+					"<https://meccano.io/scheduler#organizer> <" + event.organizer + "> ;\n" +
+					"<https://meccano.io/scheduler#proposed> " + sProposed + " ;\n" +
+    				"<https://meccano.io/scheduler#attendee> " + sAttendee + " .\n" ;
     	return rdf;
     };
     
@@ -1529,34 +1529,34 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     	}
     	
     	var rdf =   "<" + uri + ">\n" +
-    				"a <http://www.w3.org/2000/01/rdf-schema#Resource>, <https://example.com/scheduler#schedulerEvent> ;\n" +
-    				"<https://example.com/scheduler#title> \"" + event.title + "\" ;\n" +
-    				"<https://example.com/scheduler#description> \"" + event.description + "\" ;\n" +
-    				"<https://example.com/scheduler#origin_url> <" + event.origin_url + "> ;\n" +
-					"<https://example.com/scheduler#organizer> <" + event.organizer + "> ;\n" +
-					"<https://example.com/scheduler#proposed> " + sProposed + " ;\n" +
-    				"<https://example.com/scheduler#attendee> " + sAttendee + " .\n" ;
+    				"a <http://www.w3.org/2000/01/rdf-schema#Resource>, <https://meccano.io/scheduler#schedulerEvent> ;\n" +
+    				"<https://meccano.io/scheduler#title> \"" + event.title + "\" ;\n" +
+    				"<https://meccano.io/scheduler#description> \"" + event.description + "\" ;\n" +
+    				"<https://meccano.io/scheduler#origin_url> <" + event.origin_url + "> ;\n" +
+					"<https://meccano.io/scheduler#organizer> <" + event.organizer + "> ;\n" +
+					"<https://meccano.io/scheduler#proposed> " + sProposed + " ;\n" +
+    				"<https://meccano.io/scheduler#attendee> " + sAttendee + " .\n" ;
     	return rdf;
     };
     
     // Composes an event invitation as RDF resource
     $scope.eventInvitationTemplate = function (uri, event) {    	
     	var rdf =   "<" + "" + ">\n" +
-    				"a <http://www.w3.org/2000/01/rdf-schema#Resource>, <https://example.com/scheduler#schedulerInvitation> ;\n" +
-    				"<https://example.com/scheduler#origin_url> <" + event.origin_url + "> ;\n" +
-    				"<https://example.com/scheduler#title> \"" + event.title + "\" ;\n" +
-    				"<https://example.com/scheduler#description> \"" + event.description + "\" ;\n" +
-					"<https://example.com/scheduler#organizer> <" + event.organizer + "> .\n";
+    				"a <http://www.w3.org/2000/01/rdf-schema#Resource>, <https://meccano.io/scheduler#schedulerInvitation> ;\n" +
+    				"<https://meccano.io/scheduler#origin_url> <" + event.origin_url + "> ;\n" +
+    				"<https://meccano.io/scheduler#title> \"" + event.title + "\" ;\n" +
+    				"<https://meccano.io/scheduler#description> \"" + event.description + "\" ;\n" +
+					"<https://meccano.io/scheduler#organizer> <" + event.organizer + "> .\n";
 		return rdf;
     };
     
     // Composes an event response as RDF resource
     $scope.eventResponseTemplate = function (index, event, OPERATION) {    	
     	var rdf =   "<" + "" + ">\n" +
-    				"a <http://www.w3.org/2000/01/rdf-schema#Resource>, <https://example.com/scheduler#schedulerResponse> ;\n";
+    				"a <http://www.w3.org/2000/01/rdf-schema#Resource>, <https://meccano.io/scheduler#schedulerResponse> ;\n";
     		
     	if(OPERATION == CREATE) { 
-    		rdf += "<https://example.com/scheduler#partecipant> <" + event.partecipants[index] + "> .\n" ;
+    		rdf += "<https://meccano.io/scheduler#partecipant> <" + event.partecipants[index] + "> .\n" ;
     	}
     	
     	if(OPERATION == UPDATE) {
@@ -1571,10 +1571,10 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
 	        			sConfirmed += ", ";
 	        	}
 	        	
-	        	rdf += "<https://example.com/scheduler#confirmed> " + sConfirmed + " ;\n";
+	        	rdf += "<https://meccano.io/scheduler#confirmed> " + sConfirmed + " ;\n";
     		}
     		
-    		rdf += "<https://example.com/scheduler#partecipant> <" + event.partecipants[index] + "> .\n";
+    		rdf += "<https://meccano.io/scheduler#partecipant> <" + event.partecipants[index] + "> .\n";
 				   
     	}
 		return rdf;
@@ -1639,8 +1639,8 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     		seconds = "0" + seconds;
     	}
     		
-    	var date = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" + seconds + ".000Z";
-    	return date;
+    	var resultString = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" + seconds + ".000Z";
+    	return resultString;
     }
     
     //Builds a customized timestamp date from regular timestamp
@@ -1673,8 +1673,8 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     		seconds = "0" + seconds;
     	}
     		
-    	var date = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" + seconds + ".000Z";
-    	return date;
+    	var resultString = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" + seconds + ".000Z";
+    	return resultString;
     }
                 
     // Listen to WebIDAuth events
