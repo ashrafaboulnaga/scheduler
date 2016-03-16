@@ -77,7 +77,7 @@
 					<tr>
 						<td></td>
 						<td class="date_cell" ng-repeat="p in current_event.proposed">
-							{{p.getUTCDate()}}/{{p.getUTCMonth()+1}} <br> {{p.getHours() | addZero}}:00
+							{{p.getUTCDate()}}/{{p.getUTCMonth()+1}}<br>{{p.getHours() | addZero}}:00
 						</td>
 					</tr>
 					<tr ng-repeat="partecipant in current_event.partecipants">
