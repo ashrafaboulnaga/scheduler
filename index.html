@@ -90,6 +90,11 @@
 		    </div> 
 	    </div>
 	</div>
+	<div class="footer" ng-show="loggedin">
+      <p>
+        © 2016 <i class="fa fa-check"></i> Scheduler | <a href="https://github.com/mzereba/scheduler"><i class="fa fa-github"></i> Source</a> | <a href="https://github.com/mzereba/scheduler/issues"><i class="fa fa-bug"></i> Issues</a>
+      </p>
+    </div>
     <div modal="authenticationModal" ng-include="'templates/authenticationModal.htm'" close="cancel()"></div>
     <div modal="addEventModal" ng-include="'templates/addEventModal.htm'" close="cancel()" ></div>
     <div modal="myStorageModal" ng-include="'templates/myStorageModal.htm'" close="cancel()" ></div>

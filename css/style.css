@@ -458,3 +458,8 @@ input[type=checkbox]:checked + label {
 	display:inline-block;
 	margin-bottom: -3px;
 }
+.footer {
+	margin-top: 75px;
+	text-align: center;
+	font-size: 12px;
+}
