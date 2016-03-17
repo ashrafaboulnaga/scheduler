@@ -1181,7 +1181,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     
     // Check if a scheduler container name exists
     $scope.isContainerNameExisting = function (event) {
-    	var uri = $scope.userProfile.schedulerStorage + event.title;
+    	var uri = $scope.userProfile.schedulerStorage + event.title + "/";
         $http({
           method: 'HEAD',
           url: uri,
@@ -1208,7 +1208,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     
     // Creates a scheduler container
     $scope.createSchedulerContainer = function (event, action) {
-    	var uri = $scope.userProfile.schedulerStorage + event.title;
+    	var uri = $scope.userProfile.schedulerStorage + event.title + "/";
 		$http({
           method: 'PUT', 
 	      url: uri,
