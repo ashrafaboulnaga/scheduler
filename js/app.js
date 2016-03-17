@@ -613,7 +613,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     			}
     			
     			$scope.current_responses[i] = angular.copy(response);
-				$scope.insertResponse(response.id, $scope.current_event, UPDATE);
+				$scope.insertResponse(i, $scope.current_event, UPDATE);
     		}
     	}
 	};
@@ -1208,7 +1208,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     
     // Creates a scheduler container
     $scope.createSchedulerContainer = function (event, action) {
-    	var uri = $scope.userProfile.schedulerStorage + event.title + "/";
+    	var uri = $scope.userProfile.schedulerStorage + event.title;
 		$http({
           method: 'PUT', 
 	      url: uri,
