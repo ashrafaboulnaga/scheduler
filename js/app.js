@@ -776,7 +776,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
 		var g = $rdf.graph();
 	    var f = $rdf.fetcher(g);
 	    
-	    f.nowOrWhenFetched(uri + '*',undefined,function(){	
+	    f.nowOrWhenFetched(uri + '',undefined,function(){	
 		    var DC = $rdf.Namespace('http://purl.org/dc/elements/1.1/');
 			var RDF = $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 			var APP = $rdf.Namespace('https://example.com/');
