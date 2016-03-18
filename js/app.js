@@ -487,6 +487,15 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
         }
     };
     
+    // Simply returns item matching given id
+    $scope.getById = function (items, value) {
+        for (i in items) {
+            if (items[i].id == value) {
+                return items[i];
+            }
+        }
+    };
+    
     // Gets the index of an item in an array
     $scope.getIndex = function (items, value) {
 	    for (i in items) {
@@ -1364,9 +1373,9 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     };
     
     // Insert a response resource in the same container of the origin event
-    $scope.insertResponse = function (index, event, OPERATION) {
-    	var uri = event.origin_url + $scope.prefixResponse + index;
-    	var resource = $scope.eventResponseTemplate(index, event, OPERATION);
+    $scope.insertResponse = function (response_id, event, OPERATION) {
+    	var uri = event.origin_url + $scope.prefixResponse + response_id;
+    	var resource = $scope.eventResponseTemplate(response_id, event, OPERATION);
 	    $http({
           method: 'PUT', 
           url: uri,
@@ -1551,16 +1560,16 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     };
     
     // Composes an event response as RDF resource
-    $scope.eventResponseTemplate = function (index, event, OPERATION) {    	
+    $scope.eventResponseTemplate = function (response_id, event, OPERATION) {    	
     	var rdf =   "<" + "" + ">\n" +
     				"a <http://www.w3.org/2000/01/rdf-schema#Resource>, <https://meccano.io/scheduler#schedulerResponse> ;\n";
     		
     	if(OPERATION == CREATE) { 
-    		rdf += "<https://meccano.io/scheduler#partecipant> <" + event.partecipants[index] + "> .\n" ;
+    		rdf += "<https://meccano.io/scheduler#partecipant> <" + event.partecipants[response_id] + "> .\n" ;
     	}
     	
     	if(OPERATION == UPDATE) {
-    		var response = $scope.current_responses[index];
+    		var response = $scope.getById($scope.current_responses,  response_id);
     		
     		if(response.confirmed.length != 0){
 	    		var sConfirmed = "";
@@ -1574,7 +1583,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
 	        	rdf += "<https://meccano.io/scheduler#confirmed> " + sConfirmed + " ;\n";
     		}
     		
-    		rdf += "<https://meccano.io/scheduler#partecipant> <" + event.partecipants[index] + "> .\n";
+    		rdf += "<https://meccano.io/scheduler#partecipant> <" + event.partecipants[response_id] + "> .\n";
 				   
     	}
 		return rdf;
