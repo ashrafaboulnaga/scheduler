@@ -11,6 +11,12 @@ schedulerApp.filter('addZero', function(){
       return valueInt;
    }
 });
+
+schedulerApp.filter('nospace', function () {
+    return function (value) {
+        return (!value) ? '' : value.replace(/ /g, '');
+    };
+});
 	
 schedulerApp.directive('ngFocus', function($timeout) {
     return {
@@ -382,7 +388,7 @@ schedulerApp.directive('multipleDatePicker', ['$log', 'multipleDatePickerBroadca
     };
 }]);
 
-schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, $timeout, $http, $sce) {
+schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, $timeout, $http, $sce, $filter) {
 	$scope.events = [];
 	$scope.invitations = [];
 	$scope.contacts = [];
@@ -576,7 +582,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     		
     		newevent.organizer = $scope.userProfile.webid;
     		
-    		newevent.origin_url = $scope.userProfile.schedulerStorage + newevent.title + "/";
+    		newevent.origin_url = $filter('nospace') ($scope.userProfile.schedulerStorage + newevent.title + "/");
     		
     		newevent.partecipants = [];
     		newevent.partecipants.push(newevent.organizer);
