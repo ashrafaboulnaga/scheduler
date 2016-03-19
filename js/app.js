@@ -1381,10 +1381,11 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     
     // Insert a response resource in the same container of the origin event
     $scope.insertResponse = function (response, event, OPERATION) {
+    	var uri = "";
     	if(OPERATION == CREATE)
-    		var uri = event.origin_url + $scope.prefixResponse + response;
+    		uri = event.origin_url + $scope.prefixResponse + response;
     	if(OPERATION == UPDATE)
-    		var uri = event.origin_url + $scope.prefixResponse + response.id;
+    		uri = event.origin_url + $scope.prefixResponse + response.id;
     	
     	var resource = $scope.eventResponseTemplate(response, event, OPERATION);
 	    $http({
@@ -1576,7 +1577,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     				"a <http://www.w3.org/2000/01/rdf-schema#Resource>, <https://meccano.io/scheduler#schedulerResponse> ;\n";
     		
     	if(OPERATION == CREATE) { 
-    		rdf += "<https://meccano.io/scheduler#partecipant> <" + response.partecipant + "> .\n" ;
+    		rdf += "<https://meccano.io/scheduler#partecipant> <" + event.partecipant[response] + "> .\n" ;
     	}
     	
     	if(OPERATION == UPDATE) {  		
