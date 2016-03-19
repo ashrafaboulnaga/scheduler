@@ -1381,7 +1381,11 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     
     // Insert a response resource in the same container of the origin event
     $scope.insertResponse = function (response, event, OPERATION) {
-    	var uri = event.origin_url + $scope.prefixResponse + response.id;
+    	if(OPERATION == CREATE)
+    		var uri = event.origin_url + $scope.prefixResponse + response;
+    	if(OPERATION == UPDATE)
+    		var uri = event.origin_url + $scope.prefixResponse + response.id;
+    	
     	var resource = $scope.eventResponseTemplate(response, event, OPERATION);
 	    $http({
           method: 'PUT', 
