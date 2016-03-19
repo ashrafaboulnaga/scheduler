@@ -1577,7 +1577,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     				"a <http://www.w3.org/2000/01/rdf-schema#Resource>, <https://meccano.io/scheduler#schedulerResponse> ;\n";
     		
     	if(OPERATION == CREATE) { 
-    		rdf += "<https://meccano.io/scheduler#partecipant> <" + event.partecipant[response] + "> .\n" ;
+    		rdf += "<https://meccano.io/scheduler#partecipant> <" + event.partecipants[response] + "> .\n" ;
     	}
     	
     	if(OPERATION == UPDATE) {  		
