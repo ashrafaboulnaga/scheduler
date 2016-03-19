@@ -454,7 +454,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
 	
 	$scope.reset = function() {
     	if($scope.events.length > 0) {
-    		$scope.select(0, $scope.events[0]);
+    		$scope.select($scope.events.length-1, $scope.events[$scope.events.length-1]);
     	} else {
     		$scope.current_id = -1;
         	$scope.last_id = -1;
@@ -628,7 +628,8 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     			}
     			
     			$scope.current_responses[i] = angular.copy(response);
-				$scope.insertResponse(i, $scope.current_event, UPDATE);
+				$scope.insertResponse(response, $scope.current_event, UPDATE);
+				return;
     		}
     	}
 	};
@@ -1379,9 +1380,9 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     };
     
     // Insert a response resource in the same container of the origin event
-    $scope.insertResponse = function (response_id, event, OPERATION) {
-    	var uri = event.origin_url + $scope.prefixResponse + response_id;
-    	var resource = $scope.eventResponseTemplate(response_id, event, OPERATION);
+    $scope.insertResponse = function (response, event, OPERATION) {
+    	var uri = event.origin_url + $scope.prefixResponse + response.id;
+    	var resource = $scope.eventResponseTemplate(response, event, OPERATION);
 	    $http({
           method: 'PUT', 
           url: uri,
@@ -1566,17 +1567,15 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     };
     
     // Composes an event response as RDF resource
-    $scope.eventResponseTemplate = function (response_id, event, OPERATION) {    	
+    $scope.eventResponseTemplate = function (response, event, OPERATION) {    	
     	var rdf =   "<" + "" + ">\n" +
     				"a <http://www.w3.org/2000/01/rdf-schema#Resource>, <https://meccano.io/scheduler#schedulerResponse> ;\n";
     		
     	if(OPERATION == CREATE) { 
-    		rdf += "<https://meccano.io/scheduler#partecipant> <" + event.partecipants[response_id] + "> .\n" ;
+    		rdf += "<https://meccano.io/scheduler#partecipant> <" + response.partecipant + "> .\n" ;
     	}
     	
-    	if(OPERATION == UPDATE) {
-    		var response = $scope.getById($scope.current_responses,  response_id);
-    		
+    	if(OPERATION == UPDATE) {  		
     		if(response.confirmed.length != 0){
 	    		var sConfirmed = "";
 	        	for(j in response.confirmed) {
@@ -1589,7 +1588,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
 	        	rdf += "<https://meccano.io/scheduler#confirmed> " + sConfirmed + " ;\n";
     		}
     		
-    		rdf += "<https://meccano.io/scheduler#partecipant> <" + event.partecipants[response_id] + "> .\n";
+    		rdf += "<https://meccano.io/scheduler#partecipant> <" + response.partecipant + "> .\n";
 				   
     	}
 		return rdf;
