@@ -628,7 +628,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     			}
     			
     			$scope.current_responses[i] = angular.copy(response);
-				$scope.insertResponse(response, $scope.current_event, UPDATE);
+				$scope.insertResponse(undefined, response, $scope.current_event, UPDATE);
 				return;
     		}
     	}
@@ -1375,19 +1375,20 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     // Loops through event partecipants to create a response for each
     $scope.createResponses = function (event) {
     	for (var i in event.partecipants) {
-    			$scope.insertResponse(i, event, CREATE);
+    			$scope.insertResponse(i, undefined, event, CREATE);
     	}
     };
     
     // Insert a response resource in the same container of the origin event
-    $scope.insertResponse = function (response, event, OPERATION) {
+    $scope.insertResponse = function (index, response, event, OPERATION) {
     	var uri = "";
     	if(OPERATION == CREATE)
-    		uri = event.origin_url + $scope.prefixResponse + response;
+    		uri = event.origin_url + $scope.prefixResponse + index;
     	if(OPERATION == UPDATE)
     		uri = event.origin_url + $scope.prefixResponse + response.id;
     	
-    	var resource = $scope.eventResponseTemplate(response, event, OPERATION);
+    	var resource = $scope.eventResponseTemplate(index, response, event, OPERATION);
+    	
 	    $http({
           method: 'PUT', 
           url: uri,
@@ -1572,12 +1573,12 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     };
     
     // Composes an event response as RDF resource
-    $scope.eventResponseTemplate = function (response, event, OPERATION) {    	
+    $scope.eventResponseTemplate = function (index, response, event, OPERATION) {    	
     	var rdf =   "<" + "" + ">\n" +
     				"a <http://www.w3.org/2000/01/rdf-schema#Resource>, <https://meccano.io/scheduler#schedulerResponse> ;\n";
     		
     	if(OPERATION == CREATE) { 
-    		rdf += "<https://meccano.io/scheduler#partecipant> <" + event.partecipants[response] + "> .\n" ;
+    		rdf += "<https://meccano.io/scheduler#partecipant> <" + event.partecipants[index] + "> .\n" ;
     	}
     	
     	if(OPERATION == UPDATE) {  		
