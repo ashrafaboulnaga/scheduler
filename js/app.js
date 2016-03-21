@@ -582,7 +582,8 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     		
     		newevent.organizer = $scope.userProfile.webid;
     		
-    		newevent.origin_url = $filter('nospace') ($scope.userProfile.schedulerStorage + newevent.title + "/");
+    		var trimmed_title = $filter('nospace') (newevent.title);
+    		newevent.origin_url = $scope.userProfile.schedulerStorage + trimmed_title + "/";
     		
     		newevent.partecipants = [];
     		newevent.partecipants.push(newevent.organizer);
@@ -606,14 +607,12 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
         } else {
             //for existing event, find this event using id
             //and update it.
-            for (i in $scope.events) {
-                if ($scope.events[i].id == newevent.id) {
-                	$scope.insertEvent(newevent, UPDATE);
-                }
-            }
+           	newevent = $scope.getById($scope.events, newevent.id);
+           	$scope.insertEvent(newevent, UPDATE);
         }
     };
     
+    // Adds the selection to the response
     $scope.addResponse = function (webid, date) {
 		for(i in $scope.current_responses) {
     		var response = $scope.current_responses[i];
@@ -668,11 +667,13 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     		var split = $scope.userProfile.schedulerStorage.split("/");
     		var ws ="";
     		$scope.mystorage.storagename = split[split.length-2];
+    		
     		for(var i=0; i<split.length-2; i++){
     			ws += split[i] + "/";
     		}
+    		
     		$scope.mystorage.workspace = $scope.get($scope.userProfile.workspaces, ws);
-    	}else{
+    	} else {
     		$scope.noteTitle = "Please create a storage location for your scheduler events";
     	}
     };
@@ -1382,8 +1383,12 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     // Insert a response resource in the same container of the origin event
     $scope.insertResponse = function (index, response, event, OPERATION) {
     	var uri = "";
+    	
+    	//create the response
     	if(OPERATION == CREATE)
     		uri = event.origin_url + $scope.prefixResponse + index;
+    	
+    	//update response with current selection
     	if(OPERATION == UPDATE)
     		uri = event.origin_url + $scope.prefixResponse + response.id;
     	
@@ -1576,11 +1581,13 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     $scope.eventResponseTemplate = function (index, response, event, OPERATION) {    	
     	var rdf =   "<" + "" + ">\n" +
     				"a <http://www.w3.org/2000/01/rdf-schema#Resource>, <https://meccano.io/scheduler#schedulerResponse> ;\n";
-    		
+    	
+    	//create the responses
     	if(OPERATION == CREATE) { 
     		rdf += "<https://meccano.io/scheduler#partecipant> <" + event.partecipants[index] + "> .\n" ;
     	}
     	
+    	//update the responses with the current selection
     	if(OPERATION == UPDATE) {  		
     		if(response.confirmed.length != 0){
 	    		var sConfirmed = "";
@@ -1594,9 +1601,9 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
 	        	rdf += "<https://meccano.io/scheduler#confirmed> " + sConfirmed + " ;\n";
     		}
     		
-    		rdf += "<https://meccano.io/scheduler#partecipant> <" + response.partecipant + "> .\n";
-				   
+    		rdf += "<https://meccano.io/scheduler#partecipant> <" + response.partecipant + "> .\n";				   
     	}
+    	
 		return rdf;
     };
     
