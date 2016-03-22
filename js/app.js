@@ -819,6 +819,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     
     // Gets contacts index
     $scope.getContactsIndex = function () {
+    	$scope.contacts = [];
     	var uri = $scope.userProfile.preferencesDir;
 	    var g = $rdf.graph();
 	    var f = $rdf.fetcher(g);
@@ -843,8 +844,8 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
 							    webid: uid
 						}
 						$scope.contacts.push(contact);
+						$scope.$apply();
 					}
-                    $scope.$apply();
                 }
 			}
 	    });
@@ -1225,7 +1226,8 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     
     // Creates a scheduler container
     $scope.createSchedulerContainer = function (event, action) {
-    	var uri = $scope.userProfile.schedulerStorage + event.title + "/";
+    	var trimmed_title = $filter('nospace') (event.title);
+    	var uri = $scope.userProfile.schedulerStorage + trimmed_title + "/";
 		$http({
           method: 'PUT', 
 	      url: uri,
@@ -1255,7 +1257,8 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
         
     // Insert or update an event resource
     $scope.insertEvent = function (event, operation) {
-	    var uri = $scope.userProfile.schedulerStorage + event.title + "/"+ $scope.prefix + event.id;
+    	var trimmed_title = $filter('nospace') (event.title);
+	    var uri = $scope.userProfile.schedulerStorage + trimmed_title + "/"+ $scope.prefix + event.id;
         var resource = $scope.eventTemplate(event, uri);
         $http({
           method: 'PUT', 
@@ -1275,7 +1278,8 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
           	  	$scope.closeEditor();
             	$scope.events.push(event);
             	$scope.select($scope.events.indexOf(event), event);
-            	$scope.sendInvitations(event);
+            	//$scope.sendInvitations(event);
+            	$scope.loadInboxes(event);
             }
             else {
             	notify('Success', 'Resource updated.');
@@ -1297,7 +1301,8 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     // Insert or update a guest event resource
     $scope.insertGuestEvent = function (event, invitation) {
 	    event.id = new Date().getTime();
-    	var uri = $scope.userProfile.schedulerStorage + event.title + "_" + event.id + "/"+ $scope.prefix + event.id;
+	    var trimmed_title = $filter('nospace') (event.title);
+    	var uri = $scope.userProfile.schedulerStorage + trimmed_title + "_" + event.id + "/"+ $scope.prefix + event.id;
         var resource = $scope.guestEventTemplate(event, uri);
         $http({
           method: 'PUT', 
@@ -1329,20 +1334,63 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
         });
     };
     
-    // Loops through event partecipants
-    $scope.sendInvitations = function (event) {
+    // Loops through event partecipants to get each inbox URL
+    $scope.loadInboxes = function (event) {
     	for (var i in event.partecipants) {
-    		if(!angular.equals($scope.userProfile.webid, event.partecipants[i])) {
-    			var uri ="";
-    	    	var temp = event.partecipants[i].split("/");
-    	    	for(var i=0; i<temp.length-2; i++) {
-    	    		uri += temp[i] + "/";
-    	    	}
-    	    	uri += "Inbox/";
-    			$scope.send(uri, event);
+    		$scope.getInbox(i, event);
+    	}
+    };
+    
+    // Gets users inbox
+    $scope.getInbox = function (index, event) {
+		var partecipantsInboxes = [];
+    	var g = $rdf.graph();
+	    var f = $rdf.fetcher(g);
+	    var uri = (event.partecipants[i].indexOf('#') >= 0)?event.partecipants[i].slice(0, event.partecipants[i].indexOf('#')):event.partecipants[i];
+	    
+	    f.nowOrWhenFetched(uri ,undefined,function(){	
+			var RDF = $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+			var TERMS = $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
+			var FOAF = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
+	
+			var evs = g.statementsMatching($rdf.sym(event.partecipants[i]), RDF('type'), FOAF('Person'));
+			if (evs.length > 0) {
+				for (var e in evs) {
+					var inbox = g.anyStatementMatching(evs[e]['subject'], TERMS('inbox'))['object']['value'];	                    
+				    
+					partecipantsInboxes[index] = inbox;
+                    $scope.$apply();
+                }
+			}
+			
+			if(event.partecipants.length == partecipantsInboxes.length)
+				$scope.sendInvitations(partecipantsInboxes, event);
+	    });  
+    };
+    
+    // Loops through event inboxes to send invitations
+    $scope.sendInvitations = function (inboxes, event) {
+    	for (var i in inboxes) {
+    		if(!angular.equals(event.organizer, event.partecipants[i])) {
+    			$scope.send(inboxes[i], event);
     		}
     	}
     };
+    
+//    // Loops through event partecipants
+//    $scope.sendInvitations = function (event) {
+//    	for (var i in event.partecipants) {
+//    		if(!angular.equals($scope.event.organizer, event.partecipants[i])) {
+//    			var uri ="";
+//    	    	var temp = event.partecipants[i].split("/");
+//    	    	for(var i=0; i<temp.length-2; i++) {
+//    	    		uri += temp[i] + "/";
+//    	    	}
+//    	    	uri += "Inbox/";
+//    			$scope.send(uri, event);
+//    		}
+//    	}
+//    };
     
     // Insert an event invitation resource in partecipants inbox
     $scope.send = function (uri, event) {
@@ -1376,7 +1424,7 @@ schedulerApp.controller('SchedulerCtrl', function($rootScope, $scope, $compile, 
     // Loops through event partecipants to create a response for each
     $scope.createResponses = function (event) {
     	for (var i in event.partecipants) {
-    			$scope.insertResponse(i, undefined, event, CREATE);
+    		$scope.insertResponse(i, undefined, event, CREATE);
     	}
     };
     
